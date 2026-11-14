@@ -4,8 +4,8 @@ export class InMemoryTaskRepository implements TaskRepository {
   private tasks: Task[] = [];
   private nextId = 1;
 
-  async list(): Promise<Task[]> {
-    return [...this.tasks];
+  async list(filter: { done?: boolean } = {}): Promise<Task[]> {
+    return this.tasks.filter((t) => filter.done === undefined || t.done === filter.done);
   }
   async findById(id: number): Promise<Task | null> {
     return this.tasks.find((t) => t.id === id) ?? null;

@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { parseId, validateNewTask, validateTaskChanges } from '../../src/tasks/validation.js';
+import {
+  parseDoneFilter,
+  parseId,
+  validateNewTask,
+  validateTaskChanges,
+} from '../../src/tasks/validation.js';
 
 describe('validateNewTask', () => {
   it('aceita tarefa válida e aplica valores padrão', () => {
@@ -62,5 +67,18 @@ describe('parseId', () => {
     ['99999999999999999999', null],
   ])('parseId(%s) = %s', (raw, expected) => {
     expect(parseId(raw)).toBe(expected);
+  });
+});
+
+describe('parseDoneFilter', () => {
+  it('converte true/false e ignora ausência', () => {
+    expect(parseDoneFilter('true')).toEqual({ ok: true, value: true });
+    expect(parseDoneFilter('false')).toEqual({ ok: true, value: false });
+    expect(parseDoneFilter(undefined)).toEqual({ ok: true, value: undefined });
+  });
+
+  it('rejeita valores inválidos', () => {
+    expect(parseDoneFilter('sim').ok).toBe(false);
+    expect(parseDoneFilter(['true']).ok).toBe(false);
   });
 });

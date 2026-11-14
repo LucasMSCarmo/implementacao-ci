@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import type { TaskRepository } from './types.js';
-import { parseId, validateNewTask, validateTaskChanges } from './validation.js';
+import { parseDoneFilter, parseId, validateNewTask, validateTaskChanges } from './validation.js';
 
 export function taskRoutes(repo: TaskRepository): Router {
   const router = Router();
 
-  router.get('/', async (_req, res) => {
-    res.json(await repo.list());
+  router.get('/', async (req, res) => {
+    const done = parseDoneFilter(req.query.done);
+    if (!done.ok) return void res.status(400).json({ errors: done.errors });
+    res.json(await repo.list({ done: done.value }));
   });
 
   router.get('/:id', async (req, res) => {

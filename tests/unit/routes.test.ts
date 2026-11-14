@@ -52,6 +52,14 @@ describe('rotas /tasks (repositório em memória)', () => {
     await request(app).get(`/tasks/${body.id}`).expect(404);
   });
 
+  it('filtra tarefas por status', async () => {
+    const { body } = await request(app).post('/tasks').send({ title: 'Feita', done: true });
+    await request(app).post('/tasks').send({ title: 'Pendente' });
+    const res = await request(app).get('/tasks?done=true').expect(200);
+    expect(res.body).toEqual([body]);
+    await request(app).get('/tasks?done=talvez').expect(400);
+  });
+
   it('retorna 404 para rota desconhecida', async () => {
     await request(app).get('/nada').expect(404);
   });
