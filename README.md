@@ -8,7 +8,7 @@ usada para demonstrar um workflow de **Integração Contínua** com GitHub Actio
 | Método | Rota         | Descrição                               |
 | ------ | ------------ | --------------------------------------- |
 | GET    | `/health`    | Status da API e da conexão com o banco  |
-| GET    | `/tasks`     | Lista tarefas                           |
+| GET    | `/tasks`     | Lista tarefas (`?done=true\|false`)     |
 | GET    | `/tasks/:id` | Busca uma tarefa                        |
 | POST   | `/tasks`     | Cria (`title`, `description?`, `done?`) |
 | PATCH  | `/tasks/:id` | Altera campos de uma tarefa             |

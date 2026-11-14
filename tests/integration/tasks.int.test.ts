@@ -50,6 +50,15 @@ describe('API de tarefas + PostgreSQL', () => {
     expect(res.body.map((t: { title: string }) => t.title)).toEqual(['A', 'B']);
   });
 
+  it('GET /tasks?done= filtra pelo status no banco', async () => {
+    await send('POST', '/tasks', { title: 'Feita', done: true });
+    await send('POST', '/tasks', { title: 'Pendente' });
+    const feitas = await send('GET', '/tasks?done=true');
+    const pendentes = await send('GET', '/tasks?done=false');
+    expect(feitas.body.map((t: { title: string }) => t.title)).toEqual(['Feita']);
+    expect(pendentes.body.map((t: { title: string }) => t.title)).toEqual(['Pendente']);
+  });
+
   it('PATCH /tasks/:id altera apenas os campos enviados', async () => {
     const { body } = await send('POST', '/tasks', { title: 'Original', description: 'desc' });
     const res = await send('PATCH', `/tasks/${body.id}`, { done: true });

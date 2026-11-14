@@ -15,7 +15,7 @@ export interface NewTask {
 export type TaskChanges = Partial<NewTask>;
 
 export interface TaskRepository {
-  list(): Promise<Task[]>;
+  list(filter?: { done?: boolean }): Promise<Task[]>;
   findById(id: number): Promise<Task | null>;
   create(task: NewTask): Promise<Task>;
   update(id: number, changes: TaskChanges): Promise<Task | null>;

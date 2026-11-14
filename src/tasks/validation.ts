@@ -77,6 +77,13 @@ export function validateTaskChanges(body: unknown): Result<TaskChanges> {
   return { ok: true, value: changes };
 }
 
+export function parseDoneFilter(raw: unknown): Result<boolean | undefined> {
+  if (raw === undefined) return { ok: true, value: undefined };
+  if (raw === 'true') return { ok: true, value: true };
+  if (raw === 'false') return { ok: true, value: false };
+  return { ok: false, errors: ['filtro done deve ser true ou false'] };
+}
+
 export function parseId(raw: string): number | null {
   if (!/^\d+$/.test(raw)) return null;
   const id = Number(raw);

@@ -24,8 +24,11 @@ function toTask(row: TaskRow): Task {
 export class PgTaskRepository implements TaskRepository {
   constructor(private readonly pool: Pool) {}
 
-  async list(): Promise<Task[]> {
-    const { rows } = await this.pool.query<TaskRow>(`SELECT ${COLUMNS} FROM tasks ORDER BY id`);
+  async list(filter: { done?: boolean } = {}): Promise<Task[]> {
+    const { rows } = await this.pool.query<TaskRow>(
+      `SELECT ${COLUMNS} FROM tasks WHERE ($1::boolean IS NULL OR done = $1) ORDER BY id`,
+      [filter.done ?? null],
+    );
     return rows.map(toTask);
   }
 
